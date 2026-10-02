@@ -1,4 +1,5 @@
 from collections import deque
+from collections.abc import Callable
 import hashlib
 from pathlib import Path
 import shutil
@@ -34,7 +35,9 @@ def verify_model(path: Path) -> None:
 
 
 def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
-              zone="Unspecified zone", output_dir: Path = Path("./outputs")) -> dict:
+              zone="Unspecified zone", output_dir: Path = Path("./outputs"),
+              job_id: str | None = None,
+              progress_callback: Callable[[int], None] | None = None) -> dict:
     if not video.is_file():
         raise FileNotFoundError(f"Input video not found: {video}")
     verify_model(model_path)
@@ -53,6 +56,7 @@ def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
     if not cap.isOpened():
         raise ValueError(f"Could not open video file: {video}")
     fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
+    total_frames = max(0, int(cap.get(cv2.CAP_PROP_FRAME_COUNT)))
     width, height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     if width <= 0 or height <= 0:
         cap.release()
@@ -105,6 +109,9 @@ def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
             for event_index, event in captured.items():
                 if event.get("after_frame") is None and frame_index >= event["created_frame"] + round(fps * 2):
                     event["after_frame"] = frame.copy()
+            if progress_callback and (frame_index % max(1, total_frames // 100 or 1) == 0):
+                progress_callback(min(99, int((frame_index + 1) / total_frames * 100))
+                                  if total_frames else 0)
             frame_index += 1
     finally:
         cap.release()
@@ -137,7 +144,7 @@ def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
             0.5, event["object_confidence"] * 0.5)
         record = Incident(
             id=incident_id, status="pending_review", camera_id=camera_id, zone=zone,
-            source_video=str(video.resolve()), actor_track_id=event["actor_track_id"],
+            source_video=str(video.resolve()), job_id=job_id, actor_track_id=event["actor_track_id"],
             object_track_id=event["object_track_id"], waste_class="trash",
             event_time_seconds=event["event_time_seconds"], confidence=confidence,
             confidence_components={"object_detection": event["object_confidence"],

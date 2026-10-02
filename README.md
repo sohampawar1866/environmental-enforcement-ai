@@ -24,17 +24,9 @@ cd frontend && npm install && cd ..
 
 The downloader verifies the checkpoint's expected 40,498,732-byte size and SHA-256. Model weights, videos, database, and evidence are ignored by Git.
 
-## Run a video
+## Use the local app
 
-```bash
-uv run environmental-enforcement /path/to/staged-clip.mp4 --camera-id CAM-01 --zone 'Simulated Beach Zone'
-```
-
-The command writes an annotated MP4 to `outputs/`, candidate incident records to the SQLite database, and evidence frames/clips under `evidence/`. It prints processed frames, detection count, unique track count, candidate count, elapsed seconds, and processing FPS. It requires the audited checkpoint; a missing or fingerprint-mismatched file fails before inference.
-
-## Start the local review app
-
-In separate terminals:
+Start the backend and frontend in separate terminals:
 
 ```bash
 uv run uvicorn app.main:app --app-dir backend --reload
@@ -45,7 +37,19 @@ cd frontend
 npm run dev
 ```
 
-Open the Vite URL shown in the terminal (normally `http://localhost:5173`). API docs are at `http://127.0.0.1:8000/docs`.
+Open the Vite URL shown in the terminal (normally `http://localhost:5173`). On **Video intake**, upload a staged MP4 (up to 500 MB), add a camera and zone label, and follow the local analysis job through completion. Completed output links and generated candidates lead into **Review queue**, where each candidate can be inspected and approved or dismissed by a human. Treat the footage as simulated CCTV and attribution as provisional.
+
+**Live Camera Webhook** describes a planned continuous camera connection. It is not connected: there is no active receiver, external event intake, or live feed in this version.
+
+## Developer CLI fallback
+
+```bash
+uv run environmental-enforcement /path/to/staged-clip.mp4 --camera-id CAM-01 --zone 'Simulated Beach Zone'
+```
+
+The command writes an annotated MP4 to `outputs/`, candidate incident records to the SQLite database, and evidence frames/clips under `evidence/`. It prints processed frames, detection count, unique track count, candidate count, elapsed seconds, and processing FPS. It requires the audited checkpoint; a missing or fingerprint-mismatched file fails before inference.
+
+The app API docs are at `http://127.0.0.1:8000/docs`. Upload jobs run one at a time in a local in-process worker and are persisted in SQLite. If the server restarts while a job is queued or running, it is marked failed with an interruption message; partial work is not resumed. Uploads are stored under ignored `data/uploads/`, generated output under `outputs/`, and evidence under `evidence/`.
 
 ## Checks
 
