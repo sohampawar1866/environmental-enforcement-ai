@@ -9,7 +9,6 @@ declare module 'lucide-react' {
   export const ChevronRight: (props: IconProps) => ReactElement | null;
   export const CircleAlert: (props: IconProps) => ReactElement | null;
   export const Clock3: (props: IconProps) => ReactElement | null;
-  export const Copy: (props: IconProps) => ReactElement | null;
   export const FileVideo2: (props: IconProps) => ReactElement | null;
   export const Leaf: (props: IconProps) => ReactElement | null;
   export const Link2: (props: IconProps) => ReactElement | null;
