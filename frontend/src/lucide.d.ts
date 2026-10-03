@@ -25,6 +25,7 @@ declare module 'lucide-react' {
   export const Leaf: LucideIcon;
   export const Link2: LucideIcon;
   export const Lock: LucideIcon;
+  export const Moon: LucideIcon;
   export const Play: LucideIcon;
   export const Scale: LucideIcon;
   export const ScanLine: LucideIcon;
@@ -32,6 +33,7 @@ declare module 'lucide-react' {
   export const Server: LucideIcon;
   export const Shield: LucideIcon;
   export const ShieldCheck: LucideIcon;
+  export const Sun: LucideIcon;
   export const Terminal: LucideIcon;
   export const Timer: LucideIcon;
   export const UploadCloud: LucideIcon;

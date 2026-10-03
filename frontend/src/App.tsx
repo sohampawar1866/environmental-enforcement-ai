@@ -1,16 +1,27 @@
 import { ChangeEvent, DragEvent, useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowDownUp, ArrowLeft, ArrowRight, Check, ChevronRight, CircleAlert, Compass, FileVideo2, Leaf, Link2, Search, ShieldCheck, UploadCloud, Webhook, X } from 'lucide-react';
+import { Activity, ArrowDownUp, ArrowLeft, ArrowRight, Check, ChevronRight, CircleAlert, Compass, FileVideo2, Leaf, Link2, Moon, Search, ShieldCheck, Sun, UploadCloud, Webhook, X } from 'lucide-react';
 import LandingPage from './landing/LandingPage';
 
 type TimelineStep = {state:string;frame:number;time_seconds:number;reason:string};
 type Incident = {id:string;created_at:string;status:string;camera_id:string;zone:string;source_video:string;job_id:string|null;actor_track_id:number|null;object_track_id:number;waste_class:string;event_time_seconds:number;confidence:number;confidence_components:Record<string,string|number>;timeline:TimelineStep[];evidence:Record<string,string>;review_note:string|null};
 type VideoJob = {id:string;created_at:string;updated_at:string;status:'queued'|'running'|'completed'|'failed';progress:number;original_filename:string;camera_id:string;zone:string;result:Record<string,any>|null;error:string|null};
 type Page = 'landing'|'intake'|'review'|'webhook';
+type Theme = 'dark'|'light';
 const api='/api';
 const assetUrl=(id:string,name:string)=>`${api}/evidence/${id}/${encodeURIComponent(name)}`;
 const maxUploadBytes=500*1024*1024;
 
 export default function App(){
+  const [theme,setTheme]=useState<Theme>(()=>{
+    return (localStorage.getItem('civicclean_theme') as Theme)||'dark';
+  });
+  const toggleTheme=()=>{
+    setTheme(current=>{
+      const next:Theme=current==='dark'?'light':'dark';
+      localStorage.setItem('civicclean_theme',next);
+      return next;
+    });
+  };
   const [page,setPage]=useState<Page>('landing');
   const [items,setItems]=useState<Incident[]>([]);
   const [selected,setSelected]=useState<string|null>(null);
@@ -81,20 +92,27 @@ export default function App(){
     return <LandingPage onNavigate={(next)=>{setPage(next);if(next==='review')void refresh()}} pendingCount={pending}/>;
   }
 
-  return <div className="shell">
+  return <div className="shell" data-theme={theme}>
     <aside className="rail">
-      <div className="brand" onClick={()=>setPage('landing')} style={{cursor:'pointer'}} title="Return to Overview"><div className="brandmark"><Leaf size={19}/></div><span>CIVICCLEAN</span></div>
+      <div className="brand" onClick={()=>setPage('landing')} style={{cursor:'pointer'}} title="Return to Overview"><div className="brandmark"><Leaf size={18}/></div><span>CIVICCLEAN</span></div>
       <div className="railnav">
         <button onClick={()=>setPage('landing')}><Compass size={18}/><span>Overview</span></button>
         <button className={page==='intake'?'navactive':''} onClick={()=>setPage('intake')}><UploadCloud size={18}/><span>Video intake</span></button>
         <button className={page==='webhook'?'navactive':''} onClick={()=>setPage('webhook')}><Webhook size={18}/><span>Live camera</span></button>
         <button className={page==='review'?'navactive':''} onClick={()=>{setPage('review');void refresh()}}><ShieldCheck size={18}/><span>Review queue</span><b className="navcount">{pending}</b></button>
       </div>
-      <div className="railbottom"><div className="local"><span className="pulse"/> LOCAL SYSTEM</div><small>Evidence stays on this device</small></div>
+      <div className="railbottom"><div className="local"><span className="pulse"/> LOCAL PIPELINE</div><small>Air-gapped local adjudication</small></div>
     </aside>
 
     <main className="main">
-      <header className="topbar"><div className="crumb"><span onClick={()=>setPage('landing')} style={{cursor:'pointer'}}>CIVICCLEAN</span> <ChevronRight size={13}/> OPERATIONS <ChevronRight size={13}/> {pageTitle.toUpperCase()}</div></header>
+      <header className="topbar">
+        <div className="crumb"><span onClick={()=>setPage('landing')} style={{cursor:'pointer'}}>CIVICCLEAN</span> <ChevronRight size={13}/> OPERATIONS <ChevronRight size={13}/> {pageTitle.toUpperCase()}</div>
+        <div className="topbarActions">
+          <button className="themeToggle" onClick={toggleTheme} title={`Switch to ${theme==='dark'?'Light':'Dark'} mode`} aria-label="Toggle theme">
+            {theme==='dark' ? <><Sun size={14}/><span>Light</span></> : <><Moon size={14}/><span>Dark</span></>}
+          </button>
+        </div>
+      </header>
       <section className="pagehead"><div><div className="eyebrow">ENVIRONMENTAL MONITORING <span>•</span> LOCAL REVIEW</div><h1>{pageTitle}</h1><p>{pageSubtitle}</p></div>{page==='review'&&<div className="queuecount"><span>{pending.toString().padStart(2,'0')}</span><small>AWAITING REVIEW</small></div>}</section>
       {error&&<div className="error"><CircleAlert size={16}/>{error}<button onClick={()=>setError('')} aria-label="Dismiss error"><X size={14}/></button></div>}
 
