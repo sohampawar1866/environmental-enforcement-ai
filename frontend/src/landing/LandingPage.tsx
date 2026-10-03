@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { ArrowRight, Check, X, Shield, Lock, Eye, ShieldCheck } from "lucide-react";
+import { ArrowRight, X, Shield, Lock, Eye, ShieldCheck } from "lucide-react";
 import styles from "./landing.module.css";
 
 interface LandingPageProps {
@@ -333,9 +333,6 @@ export default function LandingPage({ onNavigate, pendingCount }: LandingPagePro
   // Infrastructure active region
   const [activeRegion, setActiveRegion] = useState(0);
 
-  // Pricing monthly / annual toggle
-  const [isAnnual, setIsAnnual] = useState(true);
-
   // Spotlight CTA mouse tracking
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
 
@@ -394,7 +391,6 @@ export default function LandingPage({ onNavigate, pendingCount }: LandingPagePro
     { name: "Infra", href: "#infra" },
     { name: "Integrations", href: "#integrations" },
     { name: "Security", href: "#security" },
-    { name: "Pricing", href: "#pricing" },
   ];
 
   const processSteps = [
@@ -481,37 +477,6 @@ const citation = await event.createCitationDossier({
     { name: "Twilio SMS", category: "Citizen Alerts" },
     { name: "Snowflake", category: "Data Warehouse" },
     { name: "Google Cloud", category: "Vision Compute" },
-  ];
-
-  const testimonials = [
-    {
-      quote: "CivicClean reduced our city response time to illegal dumping from 7 days to 14 minutes. The ROI was immediate.",
-      author: "Sarah Chen",
-      role: "Director of Public Works",
-      company: "Metro East Municipal District",
-      metric: "98% Faster cleanup",
-    },
-    {
-      quote: "Automated evidence dossiers give our city attorneys airtight court cases. Zero citations dismissed this fiscal quarter.",
-      author: "Marcus Webb",
-      role: "Chief Environmental Counsel",
-      company: "Harbor Bay Authority",
-      metric: "100% Case clearance",
-    },
-    {
-      quote: "Our officers review verified incidents with one click instead of scrubbing through 40 hours of surveillance footage.",
-      author: "Elena Rodriguez",
-      role: "Supervisor of Code Enforcement",
-      company: "Valley Metro Agency",
-      metric: "40x Accelerated review",
-    },
-    {
-      quote: "CJIS compliance, immutable chain-of-custody logging, and air-gapped sandboxes gave our legal counsel total confidence.",
-      author: "James Liu",
-      role: "Chief Information Security Officer",
-      company: "Capital Region Police Dept",
-      metric: "0 Data breaches",
-    },
   ];
 
   return (
@@ -1473,226 +1438,7 @@ feed.on("violation", async (incident) => {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          10. TESTIMONIALS SECTION
-          ══════════════════════════════════════════════════════════════════════ */}
-      <section className={styles.sectionWrapper}>
-        <div style={{ marginBottom: 48 }}>
-          <div className={styles.sectionEyebrow}>
-            <span style={{ width: 48, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-            <span className={styles.fontMono}>Case studies</span>
-          </div>
-          <h2 className={styles.sectionTitle}>
-            Trusted by
-            <br />
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>municipal teams.</span>
-          </h2>
-        </div>
-
-        <div className={styles.testimonialsGrid}>
-          {testimonials.map((t) => (
-            <div key={t.author} className={styles.testimonialCard}>
-              <p className={styles.testimonialQuote}>"{t.quote}"</p>
-
-              <div className={styles.testimonialAuthor}>
-                <div>
-                  <span className={styles.testimonialAuthorName}>{t.author}</span>
-                  <span className={styles.testimonialAuthorRole} style={{ display: "block" }}>
-                    {t.role} · {t.company}
-                  </span>
-                </div>
-
-                <span
-                  className={styles.fontMono}
-                  style={{
-                    fontSize: 11,
-                    backgroundColor: "rgba(236,168,214,0.15)",
-                    color: "#eca8d6",
-                    padding: "4px 10px",
-                    borderRadius: "9999px",
-                  }}
-                >
-                  {t.metric}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════
-          11. PRICING SECTION
-          ══════════════════════════════════════════════════════════════════════ */}
-      <section id="pricing" className={styles.sectionWrapper}>
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div className={styles.sectionEyebrow} style={{ justifyContent: "center" }}>
-            <span style={{ width: 32, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-            <span className={styles.fontMono}>Municipal Pricing</span>
-            <span style={{ width: 32, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-          </div>
-          <h2 className={styles.sectionTitle} style={{ textAlign: "center" }}>
-            Predictable, transparent
-            <br />
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>civic plans.</span>
-          </h2>
-          <p className={styles.sectionSubLead} style={{ margin: "20px auto 0", maxWidth: 540 }}>
-            Scale from a single test precinct to citywide camera infrastructure with zero hidden fees.
-          </p>
-
-          {/* Toggle */}
-          <div style={{ marginTop: 36 }}>
-            <div className={styles.pricingToggle}>
-              <button
-                type="button"
-                onClick={() => setIsAnnual(false)}
-                className={`${styles.pricingToggleBtn} ${!isAnnual ? styles.pricingToggleBtnActive : ""}`}
-              >
-                Monthly
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsAnnual(true)}
-                className={`${styles.pricingToggleBtn} ${isAnnual ? styles.pricingToggleBtnActive : ""}`}
-              >
-                Annual <span style={{ color: "#eca8d6", fontSize: 11, marginLeft: 4 }}>Save 20%</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.pricingGrid}>
-          {/* Plan 1 */}
-          <div className={styles.pricingCard}>
-            <div>
-              <span className={styles.fontMono} style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
-                Explorer / Pilot
-              </span>
-              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginTop: 8 }}>
-                For precinct pilot tests and feasibility validation.
-              </p>
-              <div className={styles.pricingPrice}>$0</div>
-
-              <ul className={styles.pricingFeatureList}>
-                {["3 active camera feeds", "1,000 incident events / month", "Gemini Flash vision triage", "Standard evidence export", "Community & docs support"].map((item) => (
-                  <li key={item} className={styles.pricingFeatureItem}>
-                    <Check size={16} color="#eca8d6" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => onNavigate("intake")}
-              className={styles.btnSecondaryPill}
-              style={{ width: "100%", justifyContent: "center", padding: "12px 0" }}
-            >
-              Start Free Pilot
-            </button>
-          </div>
-
-          {/* Plan 2 - Highlighted */}
-          <div className={`${styles.pricingCard} ${styles.pricingCardHighlight}`}>
-            <span
-              style={{
-                position: "absolute",
-                top: 18,
-                right: 24,
-                backgroundColor: "#eca8d6",
-                color: "#000",
-                fontSize: 10,
-                fontWeight: 700,
-                fontFamily: "monospace",
-                padding: "3px 8px",
-                borderRadius: "9999px",
-                letterSpacing: "0.06em",
-              }}
-            >
-              MOST POPULAR
-            </span>
-
-            <div>
-              <span className={styles.fontMono} style={{ fontSize: 13, color: "#eca8d6" }}>
-                Metropolitan Fleet
-              </span>
-              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginTop: 8 }}>
-                For active city public works and environmental divisions.
-              </p>
-              <div className={styles.pricingPrice}>
-                {isAnnual ? "$65" : "$79"}
-                <span style={{ fontSize: 16, color: "rgba(255,255,255,0.4)", marginLeft: 6 }}>/mo</span>
-              </div>
-
-              <ul className={styles.pricingFeatureList}>
-                {[
-                  "25 concurrent camera feeds",
-                  "50,000 incident detections / mo",
-                  "Automated citation dossier assembly",
-                  "Full audit trails & CJIS sandbox",
-                  "ArcGIS / Cityworks integration",
-                  "Officer one-click triage console",
-                  "Priority 24/7 technical support",
-                ].map((item) => (
-                  <li key={item} className={styles.pricingFeatureItem}>
-                    <Check size={16} color="#eca8d6" />
-                    <span style={{ color: "#fff" }}>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => onNavigate("intake")}
-              className={styles.btnPrimaryPill}
-              style={{ width: "100%", justifyContent: "center", padding: "14px 0" }}
-            >
-              Deploy Fleet Agent
-            </button>
-          </div>
-
-          {/* Plan 3 */}
-          <div className={styles.pricingCard}>
-            <div>
-              <span className={styles.fontMono} style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
-                Statewide Fleet
-              </span>
-              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginTop: 8 }}>
-                For state environmental agencies and metro coalitions.
-              </p>
-              <div className={styles.pricingPrice}>Custom</div>
-
-              <ul className={styles.pricingFeatureList}>
-                {[
-                  "Unlimited camera nodes & feeds",
-                  "Dedicated edge GPU clusters",
-                  "On-prem air-gapped deployment",
-                  "Custom legal statute fine-tuning",
-                  "Dedicated legal & CJIS engineer",
-                  "Guaranteed 99.99% uptime SLA",
-                ].map((item) => (
-                  <li key={item} className={styles.pricingFeatureItem}>
-                    <Check size={16} color="#eca8d6" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => onNavigate("review")}
-              className={styles.btnSecondaryPill}
-              style={{ width: "100%", justifyContent: "center", padding: "12px 0" }}
-            >
-              Contact Municipal Sales
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════
-          12. CTA SPOTLIGHT SECTION
+          10. CTA SPOTLIGHT SECTION
           ══════════════════════════════════════════════════════════════════════ */}
       <section className={styles.sectionWrapper}>
         <div
@@ -1774,7 +1520,7 @@ feed.on("violation", async (incident) => {
               </div>
 
               <span className={styles.fontMono} style={{ display: "block", fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 24 }}>
-                1,000 free inference tasks included with CivicClean
+                Open-source multimodal AI vision for public works & municipal enforcement
               </span>
             </div>
 
