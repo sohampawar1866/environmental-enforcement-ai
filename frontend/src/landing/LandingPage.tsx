@@ -1046,7 +1046,7 @@ if (incident.officerDecision === 'approved') {
               minHeight: 280,
             }}
           >
-            {/* SVG Connecting Lines Animation */}
+            {/* SVG Connecting Lines Animation (Horizontal Tracers, No Row-Wrap Diagonals) */}
             <svg
               style={{
                 position: "absolute",
@@ -1054,43 +1054,63 @@ if (incident.officerDecision === 'approved') {
                 width: "100%",
                 height: "100%",
                 pointerEvents: "none",
-                opacity: 0.6,
+                opacity: 0.28,
               }}
             >
-              {[...Array(16)].map((_, i) => {
-                const x1 = 8 + (i % 5) * 22;
-                const y1 = 12 + Math.floor(i / 5) * 28;
-                const x2 = 8 + ((i + 1) % 5) * 22;
-                const y2 = 12 + Math.floor((i + 1) / 5) * 28;
-                return (
-                  <line
-                    key={`line-${i}`}
-                    x1={`${x1}%`}
-                    y1={`${y1}%`}
-                    x2={`${x2}%`}
-                    y2={`${y2}%`}
-                    stroke="#eca8d6"
-                    strokeWidth="1.2"
-                    strokeDasharray="4 4"
-                  />
-                );
-              })}
+              <defs>
+                <style>{`
+                  @keyframes drawLineCivic {
+                    0%   { stroke-dashoffset: 260; opacity: 0; }
+                    20%  { opacity: 0.9; }
+                    75%  { opacity: 0.6; }
+                    100% { stroke-dashoffset: 0; opacity: 0; }
+                  }
+                  .civic-tracer-line {
+                    stroke: #34d399;
+                    stroke-width: 1.2;
+                    fill: none;
+                    stroke-dasharray: 260;
+                    animation: drawLineCivic 3.6s ease-in-out infinite;
+                  }
+                `}</style>
+              </defs>
+              {[0, 1, 2].flatMap((r) =>
+                [0, 1, 2, 3].map((c) => {
+                  const x1 = 8 + c * 22;
+                  const y1 = 12 + r * 28;
+                  const x2 = 8 + (c + 1) * 22;
+                  const y2 = 12 + r * 28;
+                  const delay = (r * 4 + c) * 0.16;
+                  return (
+                    <line
+                      key={`line-h-${r}-${c}`}
+                      x1={`${x1}%`}
+                      y1={`${y1}%`}
+                      x2={`${x2}%`}
+                      y2={`${y2}%`}
+                      className="civic-tracer-line"
+                      style={{ animationDelay: `${delay}s` }}
+                    />
+                  );
+                })
+              )}
             </svg>
 
-            {/* Glowing Dots */}
+            {/* Subtle Node Dots */}
             {[...Array(15)].map((_, i) => (
               <div
                 key={i}
                 style={{
                   position: "absolute",
-                  width: 6,
-                  height: 6,
+                  width: 4,
+                  height: 4,
                   borderRadius: "50%",
-                  backgroundColor: "#eca8d6",
-                  boxShadow: "0 0 10px #eca8d6",
+                  backgroundColor: "#34d399",
+                  boxShadow: "0 0 6px rgba(52, 211, 153, 0.4)",
                   left: `${8 + (i % 5) * 22}%`,
                   top: `${12 + Math.floor(i / 5) * 28}%`,
-                  opacity: 0.85,
+                  transform: "translate(-50%, -50%)",
+                  opacity: 0.35,
                 }}
               />
             ))}
