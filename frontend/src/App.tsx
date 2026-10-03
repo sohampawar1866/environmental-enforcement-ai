@@ -1,16 +1,17 @@
 import { ChangeEvent, DragEvent, useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowDownUp, ArrowLeft, ArrowRight, Check, ChevronRight, CircleAlert, FileVideo2, Leaf, Link2, Search, ShieldCheck, UploadCloud, Webhook, X } from 'lucide-react';
+import { Activity, ArrowDownUp, ArrowLeft, ArrowRight, Check, ChevronRight, CircleAlert, Compass, FileVideo2, Leaf, Link2, Search, ShieldCheck, UploadCloud, Webhook, X } from 'lucide-react';
+import LandingPage from './landing/LandingPage';
 
 type TimelineStep = {state:string;frame:number;time_seconds:number;reason:string};
 type Incident = {id:string;created_at:string;status:string;camera_id:string;zone:string;source_video:string;job_id:string|null;actor_track_id:number|null;object_track_id:number;waste_class:string;event_time_seconds:number;confidence:number;confidence_components:Record<string,string|number>;timeline:TimelineStep[];evidence:Record<string,string>;review_note:string|null};
 type VideoJob = {id:string;created_at:string;updated_at:string;status:'queued'|'running'|'completed'|'failed';progress:number;original_filename:string;camera_id:string;zone:string;result:Record<string,any>|null;error:string|null};
-type Page = 'intake'|'review'|'webhook';
+type Page = 'landing'|'intake'|'review'|'webhook';
 const api='/api';
 const assetUrl=(id:string,name:string)=>`${api}/evidence/${id}/${encodeURIComponent(name)}`;
 const maxUploadBytes=500*1024*1024;
 
 export default function App(){
-  const [page,setPage]=useState<Page>('intake');
+  const [page,setPage]=useState<Page>('landing');
   const [items,setItems]=useState<Incident[]>([]);
   const [selected,setSelected]=useState<string|null>(null);
   const [query,setQuery]=useState('');
@@ -73,13 +74,18 @@ export default function App(){
     try{const response=await fetch(`${api}/incidents/${active.id}/review`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({decision,note:null})});if(!response.ok)throw new Error('Review update failed');await refresh()}
     catch(e){setError(String(e))}finally{setBusy(false)}
   }
-  const pageTitle=page==='intake'?'Video intake':page==='webhook'?'Live Camera Webhook':'Incident review';
-  const pageSubtitle=page==='intake'?'Choose how a camera source enters the local review workflow.':page==='webhook'?'Configure webhook details for continuous camera intake.':'Inspect model-flagged events. Every alert needs a human decision.';
+  const pageTitle=page==='landing'?'System Overview':page==='intake'?'Video intake':page==='webhook'?'Live Camera Webhook':'Incident review';
+  const pageSubtitle=page==='landing'?'CivicClean Environmental Enforcement platform overview.':page==='intake'?'Choose how a camera source enters the local review workflow.':page==='webhook'?'Configure webhook details for continuous camera intake.':'Inspect model-flagged events. Every alert needs a human decision.';
+
+  if(page==='landing'){
+    return <LandingPage onNavigate={(next)=>{setPage(next);if(next==='review')void refresh()}} pendingCount={pending}/>;
+  }
 
   return <div className="shell">
     <aside className="rail">
-      <div className="brand"><div className="brandmark"><Leaf size={19}/></div><span>FIELDWATCH</span></div>
+      <div className="brand" onClick={()=>setPage('landing')} style={{cursor:'pointer'}} title="Return to Overview"><div className="brandmark"><Leaf size={19}/></div><span>CIVICCLEAN</span></div>
       <div className="railnav">
+        <button onClick={()=>setPage('landing')}><Compass size={18}/><span>Overview</span></button>
         <button className={page==='intake'?'navactive':''} onClick={()=>setPage('intake')}><UploadCloud size={18}/><span>Video intake</span></button>
         <button className={page==='webhook'?'navactive':''} onClick={()=>setPage('webhook')}><Webhook size={18}/><span>Live camera</span></button>
         <button className={page==='review'?'navactive':''} onClick={()=>{setPage('review');void refresh()}}><ShieldCheck size={18}/><span>Review queue</span><b className="navcount">{pending}</b></button>
@@ -88,7 +94,7 @@ export default function App(){
     </aside>
 
     <main className="main">
-      <header className="topbar"><div className="crumb">OPERATIONS <ChevronRight size={13}/> {pageTitle.toUpperCase()}</div></header>
+      <header className="topbar"><div className="crumb"><span onClick={()=>setPage('landing')} style={{cursor:'pointer'}}>CIVICCLEAN</span> <ChevronRight size={13}/> OPERATIONS <ChevronRight size={13}/> {pageTitle.toUpperCase()}</div></header>
       <section className="pagehead"><div><div className="eyebrow">ENVIRONMENTAL MONITORING <span>•</span> LOCAL REVIEW</div><h1>{pageTitle}</h1><p>{pageSubtitle}</p></div>{page==='review'&&<div className="queuecount"><span>{pending.toString().padStart(2,'0')}</span><small>AWAITING REVIEW</small></div>}</section>
       {error&&<div className="error"><CircleAlert size={16}/>{error}<button onClick={()=>setError('')} aria-label="Dismiss error"><X size={14}/></button></div>}
 
@@ -141,7 +147,7 @@ export default function App(){
       {page==='review'&&<section className="workspace"><div className="listpanel"><div className="listhead"><div><b>Review queue</b><span className="count">{filtered.length}</span></div><button className="sort"><ArrowDownUp size={14}/> Newest</button></div><div className="filters"><label><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search incidents"/></label><select value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">All statuses</option><option value="pending_review">Pending</option><option value="approved">Approved</option><option value="dismissed">Dismissed</option></select></div><div className="incidentlist">{filtered.map(i=><button className={`incidentrow ${active?.id===i.id?'chosen':''}`} key={i.id} onClick={()=>setSelected(i.id)}><span className="rowtop"><span className={`statusdot ${i.status}`}/><span className="statuslabel">{i.status.replace('_',' ')}</span><time>{new Date(i.created_at).toLocaleString()}</time></span><strong>Possible littering event</strong><span className="rowmeta">{i.camera_id} <i>·</i> {i.zone}</span><span className="rowbottom">OBJECT TRACK #{i.object_track_id}<ChevronRight size={15}/></span></button>)}{filtered.length===0&&<div className="empty">No incidents yet.<small>Submit a staged video to create review candidates.</small></div>}</div></div>
         <div className="detailpanel">{active?<><div className="detailhead"><div><span className={`pill ${active.status}`}>{active.status.replace('_',' ')}</span><h2>Possible littering event</h2><div className="subhead">{active.camera_id} <span>·</span> {active.zone} <span>·</span> {new Date(active.created_at).toLocaleString()}</div></div><button className="more">•••</button></div><div className="evidence"><div className="evtitle">EVIDENCE REVIEW</div>{active.evidence.annotated_video?<video controls src={assetUrl(active.id,active.evidence.annotated_video)}/>:<div className="placeholder"><Leaf size={26}/><span>Evidence clip unavailable</span></div>}<div className="frames">{(['before','separation','after'] as const).map(k=><div className="frame" key={k}>{active.evidence[k]?<img src={assetUrl(active.id,active.evidence[k])}/>:<div className="frameempty">No frame</div>}<small>{k==='before'?'BEFORE':k==='separation'?'SEPARATION':'AFTER'}</small></div>)}</div></div><div className="facts"><div><small>OBJECT TRACK</small><b>#{active.object_track_id} · {active.waste_class}</b></div><div><small>ACTOR TRACK</small><b>{active.actor_track_id===null?'Unattributed':`#${active.actor_track_id} · provisional`}</b></div><div><small>EVENT TIME</small><b>{active.event_time_seconds.toFixed(1)} sec</b></div><div><small>MODEL SCORE</small><b>{Math.round(active.confidence*100)}% <em>review aid only</em></b></div></div><div className="timeline"><div className="sectiontitle">Event timeline <small>{active.timeline.length} recorded transitions</small></div>{active.timeline.map((t,n)=><div className="eventstep" key={`${t.state}-${n}`}><span className="stepdot"/><time>{t.time_seconds.toFixed(1)}s</time><div><b>{t.state.replaceAll('_',' ')}</b><p>{t.reason}</p></div></div>)}</div><div className="warning"><CircleAlert size={17}/><span><b>Human review required.</b> Geometric association is provisional and cannot establish responsibility.</span></div><div className="actions"><button className="dismiss" disabled={busy||active.status!=='pending_review'} onClick={()=>review('dismissed')}><X size={16}/> Dismiss</button><button className="approve" disabled={busy||active.status!=='pending_review'} onClick={()=>review('approved')}><Check size={16}/> Approve for case review</button></div></>:<div className="empty detailEmpty">Select an incident to review.</div>}</div></section>}
 
-      <footer>FIELDWATCH <span>•</span> LOCAL-FIRST PROTOTYPE <span>•</span> HUMAN REVIEW REQUIRED</footer>
+      <footer>CIVICCLEAN <span>•</span> LOCAL-FIRST PROTOTYPE <span>•</span> HUMAN REVIEW REQUIRED</footer>
     </main>
   </div>;
 }
