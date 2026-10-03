@@ -15,7 +15,10 @@ declare module 'lucide-react' {
   export const Clock3: LucideIcon;
   export const Compass: LucideIcon;
   export const Cpu: LucideIcon;
+  export const Download: LucideIcon;
   export const Eye: LucideIcon;
+  export const FileCheck: LucideIcon;
+  export const FileText: LucideIcon;
   export const FileVideo2: LucideIcon;
   export const Filter: LucideIcon;
   export const Fingerprint: LucideIcon;
@@ -27,6 +30,7 @@ declare module 'lucide-react' {
   export const Lock: LucideIcon;
   export const Moon: LucideIcon;
   export const Play: LucideIcon;
+  export const Printer: LucideIcon;
   export const Scale: LucideIcon;
   export const ScanLine: LucideIcon;
   export const Search: LucideIcon;
