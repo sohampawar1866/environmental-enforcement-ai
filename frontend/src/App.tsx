@@ -1,6 +1,7 @@
 import { ChangeEvent, DragEvent, useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowDownUp, ArrowLeft, ArrowRight, Check, ChevronRight, CircleAlert, Compass, FileVideo2, Leaf, Link2, Moon, Search, ShieldCheck, Sun, UploadCloud, Webhook, X } from 'lucide-react';
+import { Activity, ArrowDownUp, ArrowLeft, ArrowRight, Check, ChevronRight, CircleAlert, Compass, FileVideo2, Leaf, Link2, Search, ShieldCheck, UploadCloud, Webhook, X } from 'lucide-react';
 import LandingPage from './landing/LandingPage';
+import AnimatedThemeToggler from './components/ui/animated-theme-toggler';
 
 type TimelineStep = {state:string;frame:number;time_seconds:number;reason:string};
 type Incident = {id:string;created_at:string;status:string;camera_id:string;zone:string;source_video:string;job_id:string|null;actor_track_id:number|null;object_track_id:number;waste_class:string;event_time_seconds:number;confidence:number;confidence_components:Record<string,string|number>;timeline:TimelineStep[];evidence:Record<string,string>;review_note:string|null};
@@ -13,15 +14,15 @@ const maxUploadBytes=500*1024*1024;
 
 export default function App(){
   const [theme,setTheme]=useState<Theme>(()=>{
-    return (localStorage.getItem('civicclean_theme') as Theme)||'dark';
+    const saved=(localStorage.getItem('civicclean_theme') as Theme)||'dark';
+    if(typeof document!=='undefined'){
+      document.documentElement.classList.toggle('dark',saved==='dark');
+    }
+    return saved;
   });
-  const toggleTheme=()=>{
-    setTheme(current=>{
-      const next:Theme=current==='dark'?'light':'dark';
-      localStorage.setItem('civicclean_theme',next);
-      return next;
-    });
-  };
+  useEffect(()=>{
+    document.documentElement.classList.toggle('dark',theme==='dark');
+  },[theme]);
   const [page,setPage]=useState<Page>('landing');
   const [items,setItems]=useState<Incident[]>([]);
   const [selected,setSelected]=useState<string|null>(null);
@@ -108,9 +109,17 @@ export default function App(){
       <header className="topbar">
         <div className="crumb"><span onClick={()=>setPage('landing')} style={{cursor:'pointer'}}>CIVICCLEAN</span> <ChevronRight size={13}/> OPERATIONS <ChevronRight size={13}/> {pageTitle.toUpperCase()}</div>
         <div className="topbarActions">
-          <button className="themeToggle" onClick={toggleTheme} title={`Switch to ${theme==='dark'?'Light':'Dark'} mode`} aria-label="Toggle theme">
-            {theme==='dark' ? <><Sun size={14}/><span>Light</span></> : <><Moon size={14}/><span>Dark</span></>}
-          </button>
+          <AnimatedThemeToggler
+            theme={theme}
+            onThemeChange={(nextTheme) => {
+              setTheme(nextTheme);
+              localStorage.setItem('civicclean_theme', nextTheme);
+            }}
+            variant="circle"
+            className="themeTogglerBtn"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+            aria-label="Toggle theme"
+          />
         </div>
       </header>
       <section className="pagehead"><div><div className="eyebrow">ENVIRONMENTAL MONITORING <span>•</span> LOCAL REVIEW</div><h1>{pageTitle}</h1><p>{pageSubtitle}</p></div>{page==='review'&&<div className="queuecount"><span>{pending.toString().padStart(2,'0')}</span><small>AWAITING REVIEW</small></div>}</section>

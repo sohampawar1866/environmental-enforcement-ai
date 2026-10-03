@@ -342,6 +342,71 @@ body {
   gap: 10px;
 }
 
+/* ─── ANIMATED THEME TOGGLER (VIEW TRANSITIONS API) ─── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
+html[data-magicui-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--magicui-theme-toggle-vt-duration);
+}
+
+.themeTogglerBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  padding: 0;
+  position: relative;
+  outline: none;
+}
+
+.themeTogglerBtn:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-active);
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.themeTogglerBtn svg {
+  width: 17px;
+  height: 17px;
+  color: var(--accent-primary);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.themeTogglerBtn:hover svg {
+  transform: rotate(15deg);
+}
+
+.themeTogglerBtn:active {
+  transform: scale(0.93);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .themeToggle {
   display: inline-flex;
   align-items: center;
