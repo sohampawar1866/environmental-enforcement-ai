@@ -7,7 +7,7 @@ interface LandingPageProps {
   pendingCount: number;
 }
 
-// ─── CYCLING WORDS FOR HERO ───
+// ─── CYCLING WORDS FOR HERO NARRATIVE ───
 const HERO_WORDS = ["spots", "proves", "audits", "clears"];
 
 function BlurWord({ word, trigger }: { word: string; trigger: number }) {
@@ -386,20 +386,20 @@ export default function LandingPage({ onNavigate, pendingCount }: LandingPagePro
   };
 
   const navLinks = [
-    { name: "The Problem", href: "#features" },
-    { name: "Vision Pipeline", href: "#how-it-works" },
-    { name: "Cloud Architecture", href: "#infra" },
+    { name: "The Blind Spot", href: "#features" },
+    { name: "The Pipeline", href: "#how-it-works" },
+    { name: "Cloud Scale", href: "#infra" },
     { name: "City Integrations", href: "#integrations" },
-    { name: "Ethics & Custody", href: "#security" },
+    { name: "Constitutional Privacy", href: "#security" },
   ];
 
   const processSteps = [
     {
       number: "01",
       title: "Ingest",
-      subtitle: "camera streams & citizen uploads",
-      description: "Connect city traffic RTSP feeds, sanitation truck dashcams, or resident smartphone footage. Videos are ingested via high-throughput multipart stream or automated webhooks without requiring new camera hardware.",
-      code: `// 1. Ingest camera stream or citizen report
+      subtitle: "existing cameras & citizen reports",
+      description: "Connect city traffic RTSP cameras, sanitation truck dashcams, or citizen smartphone reports via high-throughput multipart video intake and webhooks without purchasing expensive new hardware.",
+      code: `// Stage 1: Stream & Feed Ingestion
 const stream = await civicClean.watchStream({
   source: 'rtsp://junction-cctv-04.delhi.gov/live',
   ward: 'Ward 12 · North District',
@@ -411,7 +411,7 @@ const stream = await civicClean.watchStream({
       title: "Detect",
       subtitle: "multimodal temporal reasoning",
       description: "Lightweight edge filters detect candidate motion while multimodal vision models isolate the 3 critical temporal milestones: Pre-drop (Before), Moment of release (Separation), and Abandoned litter (After).",
-      code: `// 2. Multimodal temporal event detection
+      code: `// Stage 2: Temporal Keyframe Extraction
 stream.on('waste_separation_event', async (event) => {
   // Isolates: Before -> Separation -> After keyframes
   const dossier = await event.buildForensicDossier({
@@ -425,9 +425,9 @@ stream.on('waste_separation_event', async (event) => {
     {
       number: "03",
       title: "Enforce",
-      subtitle: "officer sign-off & crew dispatch",
-      description: "High-confidence incidents queue into the officer console for one-click verification. Verified events auto-generate court-ready citation dossiers and dispatch beat sanitation sweepers before waste spreads.",
-      code: `// 3. Human-in-the-Loop Officer Sign-off
+      subtitle: "officer verification & crew dispatch",
+      description: "High-confidence alerts queue into the officer console for one-click verification. Verified events auto-generate court-ready citation dossiers and dispatch beat sanitation sweepers before waste spreads.",
+      code: `// Stage 3: Human-in-the-Loop Officer Sign-off
 const incident = await reviewQueue.getAlert(alertId);
 if (incident.officerDecision === 'approved') {
   await incident.exportCitationNotice({ statute: 'Delhi Municipal Act §357' });
@@ -486,7 +486,7 @@ if (incident.officerDecision === 'approved') {
   return (
     <div className={styles.landingRoot}>
       {/* ══════════════════════════════════════════════════════════════════════
-          1. NAVIGATION
+          NAVIGATION
           ══════════════════════════════════════════════════════════════════════ */}
       <header className={`${styles.headerFixed} ${isScrolled ? styles.headerScrolled : ""}`}>
         <nav className={`${styles.navContainer} ${isScrolled || isMobileMenuOpen ? styles.navContainerScrolled : ""}`}>
@@ -503,24 +503,9 @@ if (incident.officerDecision === 'approved') {
               <span className={styles.brandLogoText}>CIVICCLEAN</span>
               <span className={styles.brandTm}>TM</span>
             </a>
-            <span
-              className={styles.fontMono}
-              style={{
-                display: "none",
-                fontSize: 10,
-                backgroundColor: "rgba(236,168,214,0.12)",
-                color: "#eca8d6",
-                border: "1px solid rgba(236,168,214,0.3)",
-                padding: "2px 8px",
-                borderRadius: "9999px",
-                letterSpacing: "0.06em",
-              }}
-            >
-              AWS HACKATHON · TRACK 03
-            </span>
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Storyline Navigation Links */}
           <div className={styles.navLinksDesktop}>
             {navLinks.map((link) => (
               <a key={link.name} href={link.href} className={styles.navLink}>
@@ -594,7 +579,7 @@ if (incident.officerDecision === 'approved') {
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={styles.fontDisplay}
-                style={{ fontSize: 32, color: "#fff", textDecoration: "none" }}
+                style={{ fontSize: 30, color: "#fff", textDecoration: "none" }}
               >
                 {link.name}
               </a>
@@ -629,7 +614,8 @@ if (incident.officerDecision === 'approved') {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════════
-          2. HERO SECTION
+          PROLOGUE · HERO SECTION (0:00 - 0:12 OF VIDEO)
+          Story Beat: The Crisis of Passive Surveillance
           ══════════════════════════════════════════════════════════════════════ */}
       <section className={styles.heroSection}>
         {/* Background Video */}
@@ -686,31 +672,32 @@ if (incident.officerDecision === 'approved') {
           <div className={styles.heroEyebrow}>
             <span className={styles.heroEyebrowLine} />
             <span className={styles.fontMono} style={{ color: "#eca8d6" }}>
-              AWS × WeMakeDevs Environmental Hacks · Track 03: Waste & Urban Cleanliness
+              PROLOGUE · AWS ENVIRONMENTAL HACKS (TRACK 03: WASTE & URBAN CLEANLINESS)
             </span>
           </div>
 
+          {/* Story Title Line 1 & Line 2 */}
           <h1 className={styles.heroTitle}>
-            <span style={{ display: "block" }}>Zero illegal dumping.</span>
+            <span style={{ display: "block" }}>Every city has cameras.</span>
             <span style={{ display: "block" }}>
-              Civic vision that{" "}
+              None of them see what AI{" "}
               <span style={{ position: "relative", display: "inline-block" }}>
                 <BlurWord word={HERO_WORDS[wordIndex]} trigger={wordIndex} />
               </span>
             </span>
           </h1>
 
+          {/* Narrative Script Paragraph */}
           <p
             style={{
               fontSize: "19px",
-              lineHeight: 1.6,
+              lineHeight: 1.65,
               color: "rgba(255,255,255,0.7)",
-              maxWidth: 620,
+              maxWidth: 640,
               margin: "0 0 36px",
             }}
           >
-            Municipalities don't lack CCTV cameras; they lack human eyes to watch millions of hours of footage.
-            CivicClean transforms passive city surveillance into proactive environmental deterrence — detecting illegal dumping in sub-500ms, isolating tamper-evident separation keyframes, and empowering sanitation officers to clear blackspots in minutes.
+            Municipalities install thousands of surveillance cameras, but nobody watches them until a quiet street corner or storm drain has already turned into an illegal garbage dump. CivicClean turns passive CCTV feeds into proactive civic defense — detecting illegal dumping in sub-500ms, isolating the exact moment of physical separation, and empowering sanitation officers to clear blackspots in minutes.
           </p>
 
           <div className={styles.heroActions}>
@@ -747,15 +734,15 @@ if (incident.officerDecision === 'approved') {
           </div>
         </div>
 
-        {/* Hero Bottom Stats */}
+        {/* Hero Bottom Narrative Metrics */}
         <div className={styles.heroStatsBar}>
           {[
-            { value: "3-Phase Temporal Vision", label: "Before · Separation · Post-event proof" },
-            { value: "<450ms Latency", label: "Real-time edge & RTSP stream inference" },
-            { value: "100% Human-in-the-Loop", label: "Judicial audit trail · Zero automated false citations" },
+            { value: "01 · Temporal Vision", label: "Before · Separation · Post-event proof" },
+            { value: "02 · Edge Latency", label: "Sub-450ms real-time keyframe classification" },
+            { value: "03 · Human Officer Sign-off", label: "100% auditable · Zero automated false citations" },
           ].map((stat) => (
             <div key={stat.label} className={styles.statItem}>
-              <span className={styles.statValue} style={{ fontSize: "clamp(1.6rem, 2.8vw, 2.2rem)" }}>
+              <span className={styles.statValue} style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.1rem)" }}>
                 {stat.value}
               </span>
               <span className={styles.statLabel}>{stat.label}</span>
@@ -765,26 +752,28 @@ if (incident.officerDecision === 'approved') {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          3. CAPABILITIES / BENTO SECTION
+          CHAPTER 01 · THE URBAN BLIND SPOT & THE BREAKTHROUGH (0:12 - 0:24 OF VIDEO)
+          Story Beat: Why existing models fail vs our temporal separation detection
           ══════════════════════════════════════════════════════════════════════ */}
       <section id="features" className={styles.sectionWrapper}>
         <div className={styles.sectionHeaderGrid}>
           <div>
             <div className={styles.sectionEyebrow}>
               <span style={{ width: 48, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-              <span className={styles.fontMono}>The Urban Cleanliness Crisis</span>
+              <span className={styles.fontMono} style={{ color: "#eca8d6" }}>
+                CHAPTER 01 · THE URBAN BLIND SPOT
+              </span>
             </div>
             <h2 className={styles.sectionTitle}>
-              Autonomous
+              Static AI only sees trash.
               <br />
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>deterrence.</span>
+              <span style={{ color: "rgba(255,255,255,0.4)" }}>CivicClean captures the moment of separation.</span>
             </h2>
           </div>
 
           <div>
             <p className={styles.sectionSubLead}>
-              India generates over 150,000 tonnes of municipal solid waste daily. Open dumping along arterial roads, storm drains, and vacant plots creates chronic disease vectors and monsoon waterlogging.
-              CivicClean automates continuous visual surveillance so municipal enforcement is instantaneous, fair, and transparent.
+              Why have traditional camera analytics failed for civic cleanliness? Because standard computer vision detects objects in isolation—it cannot tell if someone is carrying a grocery bag or dumping construction waste on a curb. CivicClean solves this through continuous temporal kinematic tracking.
             </p>
           </div>
         </div>
@@ -795,24 +784,24 @@ if (incident.officerDecision === 'approved') {
             <ParticleVisualization />
             <div style={{ position: "relative", zIndex: 10 }}>
               <span className={styles.fontMono} style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
-                01
+                01 · THE BREAKTHROUGH
               </span>
               <h3
                 className={styles.fontDisplay}
                 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", margin: "16px 0", color: "#fff" }}
               >
-                Temporal Waste Separation Detection
+                The Physical Separation Moment
               </h3>
               <p
                 style={{
                   fontSize: "17px",
                   lineHeight: 1.6,
                   color: "rgba(255,255,255,0.65)",
-                  maxWidth: 500,
+                  maxWidth: 520,
                   marginBottom: 36,
                 }}
               >
-                Standard object detection models fail on CCTV because they cannot differentiate between a pedestrian carrying a bag and someone actively abandoning garbage. CivicClean tracks actor-object kinematics to isolate the exact millisecond of physical separation.
+                Unlike static models that flood officers with false positives, CivicClean tracks actor-object kinematics to isolate the exact split-second an object leaves a vehicle or pedestrian's control, establishing physical abandonment.
               </p>
               <div>
                 <span className={styles.fontDisplay} style={{ fontSize: "clamp(2.8rem, 4.5vw, 4rem)", color: "#fff" }}>
@@ -850,23 +839,23 @@ if (incident.officerDecision === 'approved') {
         >
           {[
             {
-              number: "02",
-              title: "Forensic Evidence Assembly",
-              description: "Automated vehicle type classification, license plate OCR extraction, and timestamped forensic keyframe bundles ready for court presentation.",
+              number: "02 · EVIDENCE INTEGRITY",
+              title: "Forensic Vehicle & Plate Footprint",
+              description: "Automated vehicle classification, license plate OCR extraction, and timestamped forensic keyframe bundles ready for immediate court presentation.",
               stat: "100%",
               label: "tamper-evident chain of custody",
             },
             {
-              number: "03",
-              title: "Blackspot Heatmapping & Dispatch",
-              description: "Flagged incidents are geocoded to identify chronic dumping blackspots, converting surveillance footage into proactive sanitation crew routing.",
+              number: "03 · PROACTIVE ACTION",
+              title: "Predictive Blackspot Heatmapping",
+              description: "Flagged incidents are automatically geocoded to map chronic dumping clusters, transforming passive camera footage into proactive municipal sanitation crew routes.",
               stat: "4.8x",
               label: "faster municipal cleanup response",
             },
             {
-              number: "04",
-              title: "Privacy-Preserving Non-Biometric AI",
-              description: "Zero facial recognition. The pipeline tracks only geometric waste trajectories and vehicle kinetics, strictly upholding constitutional citizen privacy.",
+              number: "04 · CITIZEN SAFETY",
+              title: "Zero Biometric Surveillance",
+              description: "No facial recognition. The pipeline tracks only geometric waste trajectories and vehicle kinematics, strictly safeguarding constitutional citizen privacy.",
               stat: "0",
               label: "biometric tracking needed",
             },
@@ -912,23 +901,27 @@ if (incident.officerDecision === 'approved') {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          4. PROCESS / HOW IT WORKS SECTION
+          CHAPTER 02 · THE 3-STAGE LIVE PIPELINE (0:24 - 0:36 OF VIDEO)
+          Story Beat: The End-to-End Workflow in 3 steps
           ══════════════════════════════════════════════════════════════════════ */}
       <section id="how-it-works" className={styles.processSection}>
         <div className={styles.processHeroGrid}>
           <div>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
               <span style={{ width: 48, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-              <span className={styles.fontMono} style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
-                3-Stage Automated Pipeline
+              <span className={styles.fontMono} style={{ fontSize: 13, color: "#eca8d6" }}>
+                CHAPTER 02 · THE 3-STAGE PIPELINE
               </span>
             </div>
 
             <h2 className={styles.sectionTitle}>
-              <span style={{ display: "block" }}>Ingest.</span>
-              <span style={{ display: "block", color: "rgba(255,255,255,0.35)" }}>Detect.</span>
-              <span style={{ display: "block", color: "rgba(255,255,255,0.15)" }}>Enforce.</span>
+              <span style={{ display: "block" }}>From raw footage</span>
+              <span style={{ display: "block", color: "rgba(255,255,255,0.4)" }}>to cleared streets in three steps.</span>
             </h2>
+
+            <p style={{ fontSize: 17, lineHeight: 1.6, color: "rgba(255,255,255,0.65)", marginTop: 24, maxWidth: 480 }}>
+              Here is how the automated workflow operates in real time across any municipal camera network without requiring expensive new camera hardware.
+            </p>
           </div>
 
           <div className={styles.processTreeWrap}>
@@ -1006,7 +999,8 @@ if (incident.officerDecision === 'approved') {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          5. INFRASTRUCTURE & AWS ARCHITECTURE
+          CHAPTER 03 · AWS CLOUD & EDGE SCALE (0:36 - 0:45 OF VIDEO)
+          Story Beat: Edge filtering + AWS cloud evidence repository
           ══════════════════════════════════════════════════════════════════════ */}
       <section id="infra" className={styles.sectionWrapper}>
         <div className={styles.infraGridHeader}>
@@ -1021,17 +1015,19 @@ if (incident.officerDecision === 'approved') {
           <div>
             <div className={styles.sectionEyebrow}>
               <span style={{ width: 48, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-              <span className={styles.fontMono}>AWS Cloud & Edge Architecture</span>
+              <span className={styles.fontMono} style={{ color: "#eca8d6" }}>
+                CHAPTER 03 · AWS CLOUD & EDGE SCALE
+              </span>
             </div>
 
             <h2 className={styles.sectionTitle}>
-              Built for city
+              Edge devices filter the noise.
               <br />
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>scale.</span>
+              <span style={{ color: "rgba(255,255,255,0.4)" }}>AWS Cloud anchors the evidence.</span>
             </h2>
 
             <p className={styles.sectionSubLead} style={{ marginTop: 24, maxWidth: 560 }}>
-              Designed to execute lightweight edge inference on municipal junction boxes while leveraging AWS GPU clusters for heavy multimodal keyframe extraction and Amazon S3 for immutable evidence archiving.
+              City cameras stream petabytes of video that would overwhelm municipal networks. CivicClean scrubs frames locally on edge junction nodes, transmitting only cryptographic violation clips to AWS GPU instances and Amazon S3 vaults.
             </p>
           </div>
         </div>
@@ -1188,18 +1184,18 @@ if (incident.officerDecision === 'approved') {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          6. LIVE TELEMETRY & BENCHMARK METRICS
+          EMPIRICAL BENCHMARKS (SUPPORTING CHAPTER 03)
           ══════════════════════════════════════════════════════════════════════ */}
       <section className={styles.sectionWrapper} style={{ paddingTop: 32, paddingBottom: 64 }}>
         <div style={{ marginBottom: 48 }}>
           <div className={styles.sectionEyebrow}>
             <span style={{ width: 48, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-            <span className={styles.fontMono}>Hackathon Evaluation Benchmarks</span>
+            <span className={styles.fontMono}>EMPIRICAL BENCHMARKS</span>
           </div>
           <h2 className={styles.sectionTitle}>
-            Empirical
+            Proven performance.
             <br />
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>performance.</span>
+            <span style={{ color: "rgba(255,255,255,0.4)" }}>Measurable impact.</span>
           </h2>
         </div>
 
@@ -1208,8 +1204,8 @@ if (incident.officerDecision === 'approved') {
             <div className={styles.metricValue}>
               <AnimatedNumber end={1428920} />
             </div>
-            <span className={styles.metricLabel}>Frames evaluated in benchmark testing</span>
-            <span className={styles.metricSublabel}>tested against urban CCTV and dashcam streams</span>
+            <span className={styles.metricLabel}>Frames evaluated in dataset testing</span>
+            <span className={styles.metricSublabel}>tested across urban CCTV and dashcam streams</span>
           </div>
 
           <div className={styles.metricCard}>
@@ -1231,21 +1227,24 @@ if (incident.officerDecision === 'approved') {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          7. ECOSYSTEM & CIVIC INTEGRATIONS
+          CHAPTER 04 · CIVIC INTEGRATION (0:45 - 0:50 OF VIDEO)
+          Story Beat: Empowering existing public systems
           ══════════════════════════════════════════════════════════════════════ */}
       <section id="integrations" className={styles.sectionWrapper}>
         <div style={{ marginBottom: 48 }}>
           <div className={styles.sectionEyebrow}>
             <span style={{ width: 48, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-            <span className={styles.fontMono}>Civic & AWS Ecosystem</span>
+            <span className={styles.fontMono} style={{ color: "#eca8d6" }}>
+              CHAPTER 04 · CIVIC INTEGRATION
+            </span>
           </div>
           <h2 className={styles.sectionTitle}>
-            Plugs into city
+            Designed to empower existing
             <br />
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>infrastructure.</span>
+            <span style={{ color: "rgba(255,255,255,0.4)" }}>municipal workforces.</span>
           </h2>
           <p className={styles.sectionSubLead} style={{ marginTop: 24, maxWidth: 580 }}>
-            CivicClean integrates seamlessly with municipal Integrated Command and Control Centres (ICCC), ward-level GIS mapping, citizen complaint portals, and cloud messaging dispatch.
+            CivicClean doesn't replace sanitation workers or municipal officers—it gives them superhuman response times by plugging directly into ICCC command rooms, Swachh Bharat GIS mapping, and instant field alerts.
           </p>
         </div>
 
@@ -1263,21 +1262,24 @@ if (incident.officerDecision === 'approved') {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          8. SECURITY, PRIVACY & LEGAL CHAIN OF CUSTODY
+          CHAPTER 05 · ETHICS BY DESIGN (0:50 - 0:54 OF VIDEO)
+          Story Beat: Constitutional privacy and human-in-the-loop integrity
           ══════════════════════════════════════════════════════════════════════ */}
       <section id="security" className={styles.sectionWrapper}>
         <div style={{ marginBottom: 64 }}>
           <div className={styles.sectionEyebrow}>
             <span style={{ width: 48, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-            <span className={styles.fontMono}>Ethics & Judicial Chain of Custody</span>
+            <span className={styles.fontMono} style={{ color: "#eca8d6" }}>
+              CHAPTER 05 · ETHICS BY DESIGN
+            </span>
           </div>
           <h2 className={styles.sectionTitle}>
-            Accountability,
+            Engineered for civic justice.
             <br />
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>not surveillance state.</span>
+            <span style={{ color: "rgba(255,255,255,0.4)" }}>Not mass surveillance.</span>
           </h2>
           <p className={styles.sectionSubLead} style={{ marginTop: 24, maxWidth: 600 }}>
-            CivicClean is engineered from first principles to protect citizen privacy. Zero facial recognition, zero automated penalties, and immutable evidence logs that satisfy judicial evidentiary standards.
+            The primary concern of any civic technology is privacy. CivicClean is strictly non-biometric: zero facial recognition, SHA-256 hashed evidence, and mandatory officer verification for every single alert.
           </p>
         </div>
 
@@ -1314,7 +1316,7 @@ if (incident.officerDecision === 'approved') {
 
             <div style={{ position: "relative", zIndex: 10 }}>
               <span className={styles.fontMono} style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
-                Privacy Guarantee
+                Constitutional Privacy Guarantee
               </span>
               <div style={{ marginTop: 24 }}>
                 <span className={styles.fontDisplay} style={{ fontSize: "clamp(5rem, 8vw, 7.5rem)", color: "#fff", lineHeight: 1 }}>
@@ -1324,7 +1326,7 @@ if (incident.officerDecision === 'approved') {
                   Facial recognition models used
                 </span>
                 <span style={{ display: "block", color: "rgba(255,255,255,0.5)", marginTop: 4, fontSize: 13 }}>
-                  Pure geometric & kinematics tracking — protecting constitutional privacy
+                  Pure geometric & kinematics tracking — protecting constitutional civilian privacy
                 </span>
               </div>
             </div>
@@ -1375,13 +1377,13 @@ if (incident.officerDecision === 'approved') {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          9. SYSTEM ARCHITECTURE & DEVELOPER STACK
+          SYSTEM ARCHITECTURE & OPEN STACK
           ══════════════════════════════════════════════════════════════════════ */}
       <section id="developers" className={styles.sectionWrapper}>
         <div style={{ marginBottom: 48 }}>
           <div className={styles.sectionEyebrow}>
             <span style={{ width: 48, height: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
-            <span className={styles.fontMono}>System Architecture & Stack</span>
+            <span className={styles.fontMono}>SYSTEM ARCHITECTURE</span>
           </div>
           <h2 className={styles.sectionTitle}>
             Production-ready.
@@ -1463,7 +1465,8 @@ async def process_surveillance_feed(video_path: str, camera_id: str):
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          10. CTA SPOTLIGHT SECTION
+          CHAPTER 06 · LIVE PROTOTYPE HANDOFF (0:54 - 1:00 OF VIDEO)
+          Story Beat: The direct transition into the remaining 2 mins of live demo
           ══════════════════════════════════════════════════════════════════════ */}
       <section className={styles.sectionWrapper}>
         <div
@@ -1507,14 +1510,21 @@ async def process_surveillance_feed(video_path: str, camera_id: str):
 
           <div className={styles.ctaGrid}>
             <div style={{ flex: 1, position: "relative", zIndex: 10 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                <span style={{ width: 32, height: 1, backgroundColor: "#eca8d6" }} />
+                <span className={styles.fontMono} style={{ fontSize: 12, color: "#eca8d6" }}>
+                  CHAPTER 06 · LIVE PROTOTYPE HANDOFF
+                </span>
+              </div>
+
               <h2 className={styles.sectionTitle} style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}>
-                Experience the working
+                Don't just take our word for it.
                 <br />
-                <span style={{ color: "rgba(255,255,255,0.5)" }}>prototype.</span>
+                <span style={{ color: "rgba(255,255,255,0.5)" }}>Test the live prototype now.</span>
               </h2>
 
               <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", margin: "24px 0 40px", maxWidth: 540 }}>
-                Built for AWS Environmental Hacks (Track 03: Waste and Energy). Test an incident video upload or inspect the live officer review queue right now.
+                Built for AWS Environmental Hacks (Track 03: Waste and Energy). Transition directly into our live prototype demo: test an incident video upload or inspect the real-time officer review queue.
               </p>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
@@ -1560,7 +1570,7 @@ async def process_surveillance_feed(video_path: str, camera_id: str):
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          11. FOOTER SECTION
+          FOOTER
           ══════════════════════════════════════════════════════════════════════ */}
       <footer className={styles.footerContainer}>
         {/* Panoramic Banner Image */}
@@ -1593,13 +1603,13 @@ async def process_surveillance_feed(video_path: str, camera_id: str):
             {/* Product Links */}
             <div>
               <h5 style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(255,255,255,0.4)", marginBottom: 16 }}>
-                Solution
+                Storyline
               </h5>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {["The Problem", "Vision Pipeline", "Cloud Architecture", "City Integrations"].map((item) => (
+                {["The Blind Spot", "The Pipeline", "Cloud Scale", "City Integrations"].map((item) => (
                   <a
                     key={item}
-                    href={`#${item === "The Problem" ? "features" : item === "Vision Pipeline" ? "how-it-works" : item === "Cloud Architecture" ? "infra" : "integrations"}`}
+                    href={`#${item === "The Blind Spot" ? "features" : item === "The Pipeline" ? "how-it-works" : item === "Cloud Scale" ? "infra" : "integrations"}`}
                     style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 14 }}
                   >
                     {item}
