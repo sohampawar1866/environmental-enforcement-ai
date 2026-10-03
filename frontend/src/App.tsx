@@ -129,10 +129,17 @@ export default function App(){
         <div className="intakeHeading"><div><span className="eyebrow">CHOOSE AN INGEST METHOD</span><h2>Bring a camera source into review</h2><p>Analyze a video now, or explore how a live camera could send footage continuously.</p></div><div className="intakeTag"><Activity size={15}/> LOCAL PROCESSING</div></div>
         <div className="ingestChoices">
           <button className="ingestCard manualCard" onClick={()=>document.getElementById('video-intake-form')?.scrollIntoView({behavior:'smooth',block:'center'})}>
-            <span className="cardIcon"><FileVideo2 size={21}/></span><span className="cardEyebrow">READY TO USE</span><strong>Upload a video</strong><span className="cardText">Choose a prerecorded MP4 and run the local detection and tracking pipeline.</span><span className="cardAction">Select video <ArrowRight size={15}/></span>
+            <span className="cardIcon"><FileVideo2 size={21}/></span><span className="cardEyebrow">READY TO USE</span><strong>Upload a video</strong><span className="cardText">Choose a prerecorded MP4 and run the local detection and tracking pipeline.</span>
+            <div className="cardActionRow">
+              <span className="cardAction">Select video <ArrowRight size={15}/></span>
+            </div>
           </button>
           <button className="ingestCard webhookCard" onClick={()=>setPage('webhook')}>
-            <span className="cardIcon webhookIcon"><Webhook size={21}/></span><span className="cardEyebrow">CONTINUOUS CAMERA INGEST</span><strong>Live Camera Webhook</strong><span className="cardText">Configure how a camera platform sends new footage for analysis.</span><span className="cardAction">Configure webhook <ArrowRight size={15}/></span><span className="notConnected">NOT CONNECTED</span>
+            <span className="cardIcon webhookIcon"><Webhook size={21}/></span><span className="cardEyebrow">CONTINUOUS CAMERA INGEST</span><strong>Live Camera Webhook</strong><span className="cardText">Configure how a camera platform sends new footage for analysis.</span>
+            <div className="cardActionRow">
+              <span className="cardAction">Enter camera endpoint webhook <ArrowRight size={15}/></span>
+              <span className="notConnected">Not configured yet</span>
+            </div>
           </button>
         </div>
 
@@ -158,7 +165,7 @@ export default function App(){
 
       {page==='webhook'&&<section className="webhookPage">
         <button className="backLink" onClick={()=>setPage('intake')}><ArrowLeft size={15}/> Back to video intake</button>
-        <div className="connectionNotice"><span className="connectionIcon"><Webhook size={20}/></span><div><strong>Not connected</strong><p>This local prototype does not accept external webhook events. Use video upload to run the working analysis flow.</p></div></div>
+        <div className="connectionNotice"><span className="connectionIcon"><Webhook size={20}/></span><div><strong>Not configured yet</strong><p>This local prototype does not accept external webhook events. Use video upload to run the working analysis flow.</p></div></div>
         <div className="webhookLayout"><div className="setupMain"><div className="setupTitle"><span className="eyebrow">CAMERA EVENT DELIVERY</span><h2>Webhook configuration</h2><p>Set the source details, event types, and delivery options used by a camera platform.</p></div>
           <div className="webhookForm">
             <div className="configFields"><label>Camera source name<input value={webhookSource} onChange={e=>setWebhookSource(e.target.value)}/></label><label>Receiver URL<input type="url" value={webhookUrl} onChange={e=>setWebhookUrl(e.target.value)}/></label></div>
@@ -168,7 +175,7 @@ export default function App(){
             <label className="retryField">Delivery retry policy<select value={retryPolicy} onChange={e=>setRetryPolicy(e.target.value)}><option>3 attempts · exponential backoff</option><option>5 attempts · exponential backoff</option><option>Do not retry</option></select></label>
           </div>
           <button className="primaryButton inactiveButton" disabled title="No webhook receiver is active">Connect camera source <Link2 size={15}/></button><small className="formNote">Configuration fields are for demonstration; values are not saved or sent.</small>
-        </div><aside className="webhookSide"><div className="sideIcon"><Webhook size={20}/></div><span className="eyebrow">CONNECTION STATUS</span><h3>Not connected</h3><p>No endpoint is listening for camera notifications in this local build. These settings do not create a live connection.</p><div className="sideDivider"/><small>ACTIVE INGESTION METHOD</small><div className="sideStatus"><span/> Manual MP4 upload</div></aside></div>
+        </div><aside className="webhookSide"><div className="sideIcon"><Webhook size={20}/></div><span className="eyebrow">CONNECTION STATUS</span><h3>Not configured yet</h3><p>No endpoint is listening for camera notifications in this local build. These settings do not create a live connection.</p><div className="sideDivider"/><small>ACTIVE INGESTION METHOD</small><div className="sideStatus"><span/> Manual MP4 upload</div></aside></div>
       </section>}
 
       {page==='review'&&<section className="workspace"><div className="listpanel"><div className="listhead"><div><b>Review queue</b><span className="count">{filtered.length}</span></div><button className="sort"><ArrowDownUp size={14}/> Newest</button></div><div className="filters"><label><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search incidents"/></label><select value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">All statuses</option><option value="pending_review">Pending</option><option value="approved">Approved</option><option value="dismissed">Dismissed</option></select></div><div className="incidentlist">{filtered.map(i=><button className={`incidentrow ${active?.id===i.id?'chosen':''}`} key={i.id} onClick={()=>setSelected(i.id)}><span className="rowtop"><span className={`statusdot ${i.status}`}/><span className="statuslabel">{i.status.replace('_',' ')}</span><time>{new Date(i.created_at).toLocaleString()}</time></span><strong>Possible littering event</strong><span className="rowmeta">{i.camera_id} <i>·</i> {i.zone}</span><span className="rowbottom">OBJECT TRACK #{i.object_track_id}<ChevronRight size={15}/></span></button>)}{filtered.length===0&&<div className="empty">No incidents yet.<small>Submit a staged video to create review candidates.</small></div>}</div></div>
