@@ -8,9 +8,9 @@ type Incident = {id:string;created_at:string;status:string;camera_id:string;zone
 type VideoJob = {id:string;created_at:string;updated_at:string;status:'queued'|'running'|'completed'|'failed';progress:number;original_filename:string;camera_id:string;zone:string;result:Record<string,any>|null;error:string|null};
 type Page = 'landing'|'intake'|'review'|'webhook';
 type Theme = 'dark'|'light';
-const api='/api';
-const assetUrl=(id:string,name:string)=>`${api}/evidence/${id}/${encodeURIComponent(name)}`;
-const maxUploadBytes=500*1024*1024;
+const api = (import.meta.env.VITE_API_URL as string) || '/api';
+const assetUrl = (id: string, name: string) => `${api}/evidence/${id}/${encodeURIComponent(name)}`;
+const maxUploadBytes = Number(import.meta.env.VITE_MAX_UPLOAD_BYTES) || 500 * 1024 * 1024;
 
 export default function App(){
   const [theme,setTheme]=useState<Theme>(()=>{

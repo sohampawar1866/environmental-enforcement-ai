@@ -35,8 +35,13 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Environmental Enforcement Local API", version="0.1.0", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=[settings.frontend_origin],
-                   allow_methods=["GET", "POST", "PATCH"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.allowed_cors_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/api/health")
