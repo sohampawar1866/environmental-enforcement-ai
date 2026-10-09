@@ -24,6 +24,13 @@ class Settings(BaseSettings):
     model_path: Path = Field(default=Path("./models/baraa-best.pt"), alias="MODEL_PATH")
     max_upload_bytes: int = Field(default=500 * 1024 * 1024, alias="MAX_UPLOAD_BYTES")
 
+    # AWS S3 Storage (Optional - falls back to local storage if unset)
+    aws_s3_bucket: str | None = Field(default=None, alias="AWS_S3_BUCKET_NAME")
+    aws_region: str = Field(default="us-east-1", alias="AWS_DEFAULT_REGION")
+    aws_access_key_id: str | None = Field(default=None, alias="AWS_ACCESS_KEY_ID")
+    aws_secret_access_key: str | None = Field(default=None, alias="AWS_SECRET_ACCESS_KEY")
+    aws_s3_presigned_expiry_seconds: int = Field(default=7200, alias="AWS_S3_PRESIGNED_EXPIRY_SECONDS")
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

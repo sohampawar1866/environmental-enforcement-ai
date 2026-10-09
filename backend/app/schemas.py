@@ -42,5 +42,6 @@ class VideoJobOut(BaseModel):
 
 
 class ReviewUpdate(BaseModel):
-    decision: Literal["approved", "dismissed"]
+    decision: Literal["approved", "dismissed", "cited"]
     note: str | None = Field(default=None, max_length=4000)
+

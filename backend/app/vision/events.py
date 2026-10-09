@@ -1,5 +1,6 @@
 """Conservative per-trash-track state machine; geometric association is only provisional."""
 
+from collections import deque
 from dataclasses import dataclass, field
 
 
@@ -55,12 +56,14 @@ class StartupCalibration:
 
 
 class EventTracker:
-    def __init__(self, stationary_frames=18, carrying_frames=3):
+    def __init__(self, stationary_frames=18, carrying_frames=3, person_history_len=150):
         self.stationary_frames = stationary_frames
         self.carrying_frames = carrying_frames
+        self.person_history = deque(maxlen=person_history_len)
         self.tracks: dict[int, TrackEvent] = {}
 
     def update(self, frame_index, time_seconds, trash, people):
+        self.person_history.append((frame_index, time_seconds, list(people)))
         emitted, seen = [], set()
         for item in trash:
             object_id = item.get("track_id")
@@ -79,6 +82,22 @@ class EventTracker:
                 candidate = candidates[0] if len(candidates) == 1 else None
                 if candidate is None:
                     track.association_candidate_id, track.association_streak = None, 0
+                    # Retrospective spatio-temporal check: did a person pass over this object origin?
+                    for p_fidx, p_sec, p_list in reversed(self.person_history):
+                        if p_fidx >= frame_index:
+                            continue
+                        matches = [int(p["track_id"]) for p in p_list if p.get("track_id") is not None
+                                   and contains(expanded(tuple(p["box"])), object_center)]
+                        if matches:
+                            track.actor_track_id = matches[0]
+                            track.state = "carrying"
+                            track.separation_frame = p_fidx
+                            track.stationary_since = frame_index
+                            self._transition(track, "unknown", p_fidx, p_sec,
+                                             "Provisional actor trajectory identified at drop location")
+                            self._transition(track, "carrying", p_fidx, p_sec,
+                                             "Provisional geometric association persisted; requires visual review")
+                            break
                 elif candidate == track.association_candidate_id:
                     track.association_streak += 1
                 else:

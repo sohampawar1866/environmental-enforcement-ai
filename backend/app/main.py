@@ -1,11 +1,12 @@
+import logging
+import uuid
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-import uuid
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from sqlalchemy import inspect, select, text
 from sqlalchemy.orm import Session
 
@@ -15,6 +16,8 @@ from app.models import Incident, VideoJob
 from app.schemas import IncidentOut, ReviewUpdate, VideoJobOut
 from app.services.job_runner import video_job_runner
 from app.services.storage import local_storage
+
+logger = logging.getLogger("civicclean.api")
 
 
 @asynccontextmanager
@@ -91,6 +94,14 @@ async def create_video_job(
     db.commit()
     db.refresh(job)
     video_job_runner.enqueue(job_id)
+    logger.info(
+        "[VIDEO_INGEST] Ingested job %s | File: %s (%d bytes) | Camera: %s | Zone: %s",
+        job_id,
+        filename,
+        size_bytes,
+        job.camera_id,
+        job.zone,
+    )
     return job
 
 
@@ -126,13 +137,21 @@ def review_incident(incident_id: str, review: ReviewUpdate, db: Session = Depend
     incident = db.get(Incident, incident_id)
     if incident is None:
         raise HTTPException(status_code=404, detail="Incident not found")
-    if incident.status not in {"pending_review", "approved", "dismissed"}:
+    if incident.status not in {"pending_review", "approved", "dismissed", "cited"}:
         raise HTTPException(status_code=409, detail="Incident is not reviewable")
     incident.status = review.decision
     incident.review_note = review.note
     incident.reviewed_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(incident)
+    logger.info(
+        "[CAD_ACTION] Incident %s transitioned to '%s' | Camera %s | Zone %s | Note: %s",
+        incident_id,
+        incident.status,
+        incident.camera_id,
+        incident.zone,
+        incident.review_note,
+    )
     return incident
 
 
@@ -141,7 +160,15 @@ def get_evidence(incident_id: str, asset_name: str, db: Session = Depends(get_db
     incident = db.get(Incident, incident_id)
     if incident is None or asset_name not in incident.evidence.values():
         raise HTTPException(status_code=404, detail="Evidence asset not found")
+
+    # If S3 vault is active, redirect directly to secure S3 presigned URL
+    if local_storage.is_s3_enabled:
+        presigned_url = local_storage.get_presigned_evidence_url(incident_id, asset_name)
+        if presigned_url:
+            return RedirectResponse(url=presigned_url, status_code=307)
+
     path = local_storage.evidence_file(incident_id, asset_name)
     if path is None:
         raise HTTPException(status_code=404, detail="Evidence file not found")
     return FileResponse(path)
+

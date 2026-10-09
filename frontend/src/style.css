@@ -1626,17 +1626,19 @@ html[data-magicui-theme-vt="active"]::view-transition-group(root) {
 
 .frame {
   position: relative;
-  height: 80px;
+  aspect-ratio: 16 / 9;
+  height: auto;
   border-radius: 6px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
+  background: #000;
   border: 1px solid var(--border-subtle);
 }
 
 .frame img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #000;
 }
 
 .frame small {
@@ -2357,17 +2359,21 @@ footer span {
 }
 
 .exhibitImgWrap {
-  height: 120px;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 130px;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .exhibitImgWrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #000;
 }
 
 .exhibitEmpty {
@@ -2528,6 +2534,327 @@ footer span {
   letter-spacing: 0.5px;
 }
 
+/* ==============================================================================
+   MUNICIPAL FIELD PATROL DISPATCH STYLES
+   ============================================================================== */
+.patrolPage {
+  padding: 24px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.patrolHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 20px;
+}
+
+.patrolEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.patrolHeader h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.patrolHeader p {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+.patrolBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #10b981;
+}
+
+.pulseGreen {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulse 1.5s infinite;
+}
+
+.patrolEmpty {
+  text-align: center;
+  padding: 60px 24px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-subtle);
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.patrolEmptyIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.patrolEmpty h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.patrolEmpty p {
+  color: var(--text-muted);
+  font-size: 13px;
+  max-width: 520px;
+  margin: 0 auto 20px;
+  line-height: 1.5;
+}
+
+.patrolList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.patrolCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.patrolCard.cited {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.patrolCardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.activeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.citedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.patrolMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.patrolMeta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.patrolBody {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.suspectProfile {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.profileTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px 20px;
+}
+
+.profileGrid small {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 2px;
+}
+
+.profileGrid b {
+  font-size: 13px;
+  color: var(--text-main);
+}
+
+.patrolExhibits {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 14px;
+}
+
+.patrolExTitle {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.patrolImgRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.patrolImgItem {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--border-subtle);
+}
+
+.patrolImgItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.patrolImgItem span {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.patrolActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.viewDossierPatrolBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.viewDossierPatrolBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.citePatrolBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #10b981;
+  border: 1px solid #10b981;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.citePatrolBtn:hover {
+  background: #059669;
+}
+
+.summonsIssuedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #10b981;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* Print Optimization */
 @media print {
   body * {
@@ -2557,3 +2884,825 @@ footer span {
     padding: 10px 16px !important;
   }
 }
+
+/* ==========================================================================
+   BETTER AUTH & MUNICIPAL LOGIN PORTAL
+   ========================================================================== */
+
+.authLoadingScreen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-canvas, #080b10);
+  color: var(--text-primary, #f1f5f9);
+  gap: 14px;
+  font-family: var(--font-sans);
+  text-align: center;
+  padding: 24px;
+}
+
+.authLoadingSpinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(16, 185, 129, 0.2);
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.authLoadingTitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.loginContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.08), transparent 70%), var(--bg-canvas, #080b10);
+  padding: 24px 16px;
+  font-family: var(--font-sans);
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg-surface, #0e131d);
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.08));
+  border-radius: 14px;
+  padding: 32px 28px;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(16, 185, 129, 0.1);
+  color: var(--text-primary, #f8fafc);
+}
+
+.loginBackHomeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  color: var(--text-secondary, #94a3b8);
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 14px;
+  transition: all 0.15s ease;
+}
+
+.loginBackHomeBtn:hover {
+  color: #10b981;
+  transform: translateX(-3px);
+}
+
+.loginHeader {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.loginSeal {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+}
+
+.loginEyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: #10b981;
+  margin-bottom: 6px;
+  font-weight: 650;
+}
+
+.loginHeader h1 {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: 20px;
+  font-weight: 650;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+.loginHeader p {
+  font-size: 12px;
+  color: var(--text-secondary, #94a3b8);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.loginModeTabs {
+  display: flex;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.05));
+}
+
+.loginTab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-secondary, #94a3b8);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.loginTab.active {
+  background: var(--bg-surface-elevated, #161e2e);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loginPersonaSwitch {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
+}
+
+.personaChip {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary, #94a3b8);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.personaChip:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.personaChip.active {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34d399;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.loginErrorBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  margin-bottom: 18px;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroup label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary, #64748b);
+  font-weight: 650;
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-tertiary, #64748b);
+  pointer-events: none;
+}
+
+.formGroup input,
+.formGroup select {
+  width: 100%;
+  height: 40px;
+  background: var(--bg-input, #090d14);
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.1));
+  border-radius: 7px;
+  color: var(--text-primary, #f8fafc);
+  font-size: 13px;
+  padding: 0 14px;
+  transition: border-color 0.15s ease;
+  font-family: var(--font-sans);
+}
+
+.inputWrap input,
+.inputWrap select {
+  padding-left: 38px;
+  padding-right: 38px;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-tertiary, #64748b);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.passwordToggle:hover {
+  color: var(--text-primary, #f8fafc);
+}
+
+.loginSubmitBtn {
+  margin-top: 6px;
+  height: 42px;
+  background: #10b981;
+  color: #04100b;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.loginSubmitBtn:hover:not(:disabled) {
+  background: #059669;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.loginSubmitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loginCredentialsBox {
+  margin-top: 24px;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed rgba(16, 185, 129, 0.25);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.credBoxTitle {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #10b981;
+  font-weight: 650;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.credItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.credItem:last-child {
+  border-bottom: none;
+}
+
+.credRole {
+  display: block;
+  font-weight: 600;
+  color: var(--text-secondary, #94a3b8);
+  font-size: 10.5px;
+}
+
+.credItem code {
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #e2e8f0;
+  font-size: 10.5px;
+}
+
+.credPassLabel {
+  font-size: 10px;
+  color: var(--text-tertiary, #64748b);
+  margin-right: 4px;
+}
+
+.loginFooterLegal {
+  margin-top: 20px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-tertiary, #475569);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   OFFICER HEADER & STATUS BAR
+   ========================================================================== */
+
+.officerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--bg-surface-elevated, #0f1624);
+  border-bottom: 1px solid var(--border-default, rgba(255, 255, 255, 0.08));
+  font-family: var(--font-sans);
+}
+
+.officerBar.wardenMode {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.08), transparent 70%), #0d1420;
+  border-bottom-color: rgba(16, 185, 129, 0.2);
+}
+
+.officerInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.officerIconWrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.officerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.officerNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.officerName {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--text-primary, #f8fafc);
+}
+
+.officerRoleBadge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+
+.officerRoleBadge.adjudicator {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.officerRoleBadge.warden {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.officerSubDetails {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--text-secondary, #94a3b8);
+  font-family: var(--font-mono);
+}
+
+.dotDivider {
+  color: var(--text-tertiary, #475569);
+}
+
+.dutyStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: pulse 1.5s infinite;
+}
+
+.signOutBtn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary, #94a3b8);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.signOutBtn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+/* ==========================================================================
+   MOBILE & PWA RESPONSIVENESS
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .rail {
+    display: none; /* Hide desktop rail sidebar on mobile phone */
+  }
+
+  .main {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    padding: 10px 14px;
+  }
+
+  .patrolPage {
+    padding: 14px 12px 32px;
+  }
+
+  .patrolHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .patrolBadge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .suspectProfile .profileGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .patrolImgRow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .patrolImgItem img,
+  .patrolImgItem div {
+    height: 180px;
+  }
+
+  .patrolActions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .patrolActions button {
+    width: 100%;
+    height: 48px; /* Thumb-friendly tap target */
+    font-size: 13px;
+    justify-content: center;
+  }
+
+  .loginCard {
+    padding: 24px 18px;
+    box-shadow: none;
+    border-radius: 12px;
+  }
+
+  /* Mobile Dossier Presentation */
+  .dossierOverlay {
+    padding: 8px;
+  }
+
+  .dossierModal {
+    max-height: 96vh;
+    border-radius: 10px;
+  }
+
+  .dossierModalBar {
+    padding: 10px 14px;
+  }
+
+  .dossierBarTitle span {
+    font-size: 8.5px;
+  }
+
+  .dossierPaper {
+    padding: 20px 16px;
+    max-height: calc(96vh - 50px);
+  }
+
+  .dossierDocHeader {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    text-align: center;
+  }
+
+  .dossierSealCircle {
+    margin: 0 auto;
+  }
+
+  .dossierMetaGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .dossierGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .dossierExhibits {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .dossierExhibits .exhibitCard {
+    width: 100%;
+  }
+
+  .dossierRoutingGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* ==============================================================================
+   CENTRAL CONTROL ROOM · MUNICIPAL CAD TELEMETRY & DISPATCH MONITOR
+   ============================================================================== */
+.cadUnitTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+
+[data-theme="light"] .cadUnitTag {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+
+.cadTelemetryPanel {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .cadTelemetryPanel {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.cadTelemetryHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .cadTelemetryHead {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.cadTelemetryPill {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.cadTelemetryPill.pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.cadTelemetryPill.cited {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.cadTelemetryContent {
+  padding: 12px 14px;
+}
+
+.cadTelemetryMsg {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cadTelemetryMsg b {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+.cadTelemetryMsg p {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.cadTelemetryMsg.cadPending b {
+  color: #f59e0b;
+}
+
+.cadTelemetryMsg.cadSuccess b {
+  color: #10b981;
+}
+
+.cadTelemetryMsg.cadSuccess svg {
+  color: #10b981;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.cadPulseAmber {
+  color: #f59e0b;
+  animation: pulseAnim 1.6s infinite ease-in-out;
+}
+
+.cadPulseGreen {
+  color: #10b981;
+}
+
+.cadPulseAmberDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+  animation: pulseAnim 1.4s infinite;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.cadMonitorActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cadDeskIndicator {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.cadDispatchedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.cadClosedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+@keyframes pulseAnim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.92); }
+}
+
+.pulseAnim {
+  animation: pulseAnim 1.8s infinite ease-in-out;
+}
+

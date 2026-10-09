@@ -6,7 +6,8 @@ from sqlalchemy import update
 
 from app.config import settings
 from app.db import SessionLocal
-from app.models import VideoJob
+from app.models import Incident, VideoJob
+from app.services.storage import storage_service
 from app.vision.pipeline import run_video
 
 
@@ -66,6 +67,14 @@ class VideoJobRunner:
                     job.status, job.progress = "completed", 100
                     job.result, job.error, job.updated_at = summary, None, utcnow()
                     db.commit()
+
+            # If Amazon S3 vault is enabled, sync all extracted photographic exhibits and annotated clips
+            if storage_service.is_s3_enabled:
+                with SessionLocal() as db:
+                    for inc_id in summary.get("incident_ids", []):
+                        inc = db.get(Incident, inc_id)
+                        if inc and inc.evidence:
+                            storage_service.sync_incident_evidence(inc_id, inc.evidence)
         except Exception as exc:
             with SessionLocal() as db:
                 job = db.get(VideoJob, job_id)

@@ -3,7 +3,7 @@ import { ArrowRight, X, Shield, Lock, Eye, ShieldCheck, Scale } from "lucide-rea
 import styles from "./landing.module.css";
 
 interface LandingPageProps {
-  onNavigate: (page: "intake" | "review" | "webhook") => void;
+  onNavigate: (page: "intake" | "review" | "webhook" | "login") => void;
   pendingCount: number;
 }
 
@@ -556,6 +556,16 @@ if (incident.officerDecision === 'approved') {
           <div className={styles.navActionsDesktop}>
             <button
               type="button"
+              onClick={() => onNavigate("login")}
+              className={styles.btnSecondaryPill}
+              title="Official Municipal Enforcement Login Portal"
+            >
+              <ShieldCheck size={14} style={{ color: "#10b981" }} />
+              <span>Officer Portal</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => onNavigate("review")}
               className={styles.btnSecondaryPill}
               title="Open Incident Review Queue"
@@ -625,6 +635,18 @@ if (incident.officerDecision === 'approved') {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                onNavigate("login");
+              }}
+              className={styles.btnSecondaryPill}
+              style={{ justifyContent: "center", height: 48, borderColor: "#10b981", color: "#10b981" }}
+            >
+              <ShieldCheck size={16} />
+              <span>Officer Portal Sign In</span>
+            </button>
             <button
               type="button"
               onClick={() => {

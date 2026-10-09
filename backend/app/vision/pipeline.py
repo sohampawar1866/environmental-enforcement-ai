@@ -3,6 +3,7 @@ from collections.abc import Callable
 import hashlib
 from pathlib import Path
 import shutil
+import subprocess
 import time
 import uuid
 
@@ -66,8 +67,8 @@ def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
         cap.release()
         raise OSError(f"Could not create annotated output: {annotated_path}")
 
-    event_tracker = EventTracker(stationary_frames=max(18, round(fps * 2)))
-    history = deque(maxlen=max(1, round(fps * 3)))
+    event_tracker = EventTracker(stationary_frames=max(3, round(fps * 0.2)))
+    history = deque(maxlen=max(1, round(fps * 6)))
     captured: dict[int, dict] = {}
     calibration = StartupCalibration(max(1, round(fps * 2)))
     frame_index, detections_count, track_ids = 0, 0, set()
@@ -90,14 +91,23 @@ def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
                     conf = float(box.conf.item())
                     if track_id is not None:
                         track_ids.add(track_id)
+                    w = coords[2] - coords[0]
+                    h = coords[3] - coords[1]
+                    # Morphology filter: ground-level small objects cannot be standing pedestrians in CCTV
+                    if cls_id in person_ids and (h < 130 or (w * h < 18000 and h < 180)):
+                        cls_id = next(iter(trash_ids))
                     record = {"track_id": track_id, "box": coords, "confidence": conf}
                     (people if cls_id in person_ids else trash).append(record)
                     detections_count += 1
             eligible_trash = calibration.eligible(frame_index, trash)
             for event in event_tracker.update(frame_index, timestamp, eligible_trash, people):
-                event["before_frame"] = next((f for idx, f in reversed(history)
-                                               if idx < event["timeline"][-1]["frame"]), frame.copy())
-                event["drop_frame"] = frame.copy()
+                sep_f = event_tracker.tracks[event["object_track_id"]].separation_frame or frame_index
+                target_before = max(0, sep_f - round(fps * 2.5))
+                target_drop = max(0, sep_f - round(fps * 0.5))
+                before_f = next((f for idx, f in reversed(history) if idx <= target_before), None)
+                drop_f = next((f for idx, f in reversed(history) if idx <= target_drop), None)
+                event["before_frame"] = before_f.copy() if before_f is not None else frame.copy()
+                event["drop_frame"] = drop_f.copy() if drop_f is not None else frame.copy()
                 event["created_frame"] = frame_index
                 captured[len(captured)] = event
 
@@ -107,7 +117,7 @@ def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
             writer.write(annotated)
             history.append((frame_index, frame.copy()))
             for event_index, event in captured.items():
-                if event.get("after_frame") is None and frame_index >= event["created_frame"] + round(fps * 2):
+                if event.get("after_frame") is None and (frame_index >= event["created_frame"] + round(fps * 1.5) or frame_index >= total_frames - 2):
                     event["after_frame"] = frame.copy()
             if progress_callback and (frame_index % max(1, total_frames // 100 or 1) == 0):
                 progress_callback(min(99, int((frame_index + 1) / total_frames * 100))
@@ -122,8 +132,30 @@ def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
     if not annotated_path.is_file() or annotated_path.stat().st_size == 0:
         raise OSError("Video processing did not produce an annotated output")
 
+    # Transcode to web-standard H.264 (avc1) for smooth HTML5 video player playback
+    if shutil.which("ffmpeg"):
+        h264_tmp = annotated_path.with_name(f"{annotated_path.stem}_web.mp4")
+        try:
+            subprocess.run(
+                [
+                    "ffmpeg", "-y", "-i", str(annotated_path),
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+                    str(h264_tmp)
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=True,
+            )
+            if h264_tmp.is_file() and h264_tmp.stat().st_size > 0:
+                h264_tmp.replace(annotated_path)
+        except Exception:
+            h264_tmp.unlink(missing_ok=True)
+
     captured = {key: event for key, event in captured.items()
                 if not event_tracker.tracks[event["object_track_id"]].cancelled}
+    for event in captured.values():
+        if event.get("after_frame") is None and history:
+            event["after_frame"] = history[-1][1].copy()
     created = []
     for event in captured.values():
         incident_id = str(uuid.uuid4())
@@ -137,6 +169,8 @@ def run_video(video: Path, model_path: Path, db: Session, camera_id="CAM-01",
                 target = incident_dir / label
                 if cv2.imwrite(str(target), image):
                     assets[key.removesuffix("_frame")] = label
+                    if key == "drop_frame":
+                        assets["separation"] = label
         clip_name = "annotated.mp4"
         shutil.copy2(annotated_path, incident_dir / clip_name)
         assets["annotated_video"] = clip_name
